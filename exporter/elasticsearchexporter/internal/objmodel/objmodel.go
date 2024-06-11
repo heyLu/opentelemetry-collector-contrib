@@ -174,6 +174,14 @@ func (doc *Document) AddEvents(key string, events ptrace.SpanEventSlice) {
 	}
 }
 
+func (doc *Document) Remap(mappings map[string]string) {
+	for i := range doc.fields {
+		if remappedKey, exists := mappings[doc.fields[i].key]; exists {
+			doc.fields[i].key = remappedKey
+		}
+	}
+}
+
 // Sort sorts all fields in the document by key name.
 func (doc *Document) Sort() {
 	sort.SliceStable(doc.fields, func(i, j int) bool {

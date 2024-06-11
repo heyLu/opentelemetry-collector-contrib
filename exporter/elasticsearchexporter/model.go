@@ -61,9 +61,10 @@ type mappingModel interface {
 //
 // See: https://github.com/open-telemetry/oteps/blob/master/text/logs/0097-log-data-model.md
 type encodeModel struct {
-	dedup bool
-	dedot bool
-	mode  MappingMode
+	dedup  bool
+	dedot  bool
+	mode   MappingMode
+	fields map[string]string
 }
 
 const (
@@ -80,6 +81,8 @@ func (m *encodeModel) encodeLog(resource pcommon.Resource, record plog.LogRecord
 	default:
 		document = m.encodeLogDefaultMode(resource, record, scope)
 	}
+
+	document.Remap(m.fields)
 
 	var buf bytes.Buffer
 	if m.dedup {
