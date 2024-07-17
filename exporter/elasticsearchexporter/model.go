@@ -176,6 +176,8 @@ func (m *encodeModel) encodeSpan(resource pcommon.Resource, span ptrace.Span, sc
 	document.AddInt("Duration", durationAsMicroseconds(span.StartTimestamp().AsTime(), span.EndTimestamp().AsTime())) // unit is microseconds
 	document.AddAttributes("Scope", scopeToAttributes(scope))
 
+	document.Remap(m.fields)
+
 	if m.dedup {
 		document.Dedup()
 	} else if m.dedot {
